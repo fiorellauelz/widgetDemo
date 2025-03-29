@@ -21,6 +21,44 @@
   allow="clipboard-write"
 ></iframe>`;
 
+
+
+const subscriptionManager = {
+  init: function(containerId, options = {}) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://subscriptionsembedded.vercel.app';
+    iframe.width = '100%';
+    iframe.height = '700px';
+    iframe.frameBorder = '0';
+    iframe.allow = 'clipboard-write';
+    
+    // Pass authentication token if provided
+    if (options.authToken) {
+      iframe.onload = function() {
+        iframe.contentWindow.postMessage({
+          type: 'AUTH_TOKEN',
+          token: options.authToken
+        }, 'https://your-app-url.com');
+      };
+    }
+    
+    container.appendChild(iframe);
+    return iframe;
+  },
+  
+  navigate: function(iframe, path) {
+    if (iframe && iframe.contentWindow) {
+      iframe.contentWindow.postMessage({
+        type: 'NAVIGATE',
+        path: path
+      }, 'https://subscriptionsembedded.vercel.app');
+    }
+  }
+};
+
     
 <h1>Plan generado en Uelz</h1>
    <button class="uelz-button uelz-button-styles" data-service-id="clkrzfjmg4225601o65rtxmsvl" >Comprar</button>
